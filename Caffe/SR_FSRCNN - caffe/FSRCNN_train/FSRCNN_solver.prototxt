@@ -1,0 +1,23 @@
+# The train/test net protocol buffer definition
+net: "examples/FSRCNN/FSRCNN_net.prototxt"
+test_iter: 231
+# Carry out testing every 500 training iterations.
+test_interval: 5000
+# The base learning rate, momentum and the weight decay of the network.
+base_lr: 0.001
+momentum: 0.9
+weight_decay: 0
+# The learning rate policy
+lr_policy: "fixed"
+# Display every 100 iterations
+display: 100
+# The maximum number of iterations
+max_iter: 10000000
+# snapshot intermediate results
+snapshot: 100000
+snapshot_prefix: "examples/FSRCNN/N-56-12-4"
+# solver mode: CPU or GPU
+solver_mode: GPU
+
+
+
