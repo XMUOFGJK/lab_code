@@ -20,6 +20,10 @@ class SRCNN(nn.Module):
         gpu_ids = None
         if isinstance(input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
             gpu_ids = range(self.ngpu)
+<<<<<<< HEAD
+=======
+        # multi GPU training: model, GPUid
+>>>>>>> Update
         output = nn.parallel.data_parallel(self.main, input, gpu_ids)
         return output
 

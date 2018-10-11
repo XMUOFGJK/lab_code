@@ -26,10 +26,21 @@ args = parser.parse_args()
 # generate LRImages
 data_utils.generate_LRImage(args.HRdir,args.LRdir,3)
 
+<<<<<<< HEAD
 train_set = TrainDatasetFromFolder(args.HRdir,args.LRdir,upscale_factor=3)
 train_loader = DataLoader(dataset=train_set, num_workers=4, batch_size=args.batchSize, shuffle=True)
 
 model = SRCNN(3,N_gpu=args.ngpu)
+=======
+# initial the traindatasetfromfolder class
+train_set = TrainDatasetFromFolder(args.HRdir,args.LRdir,upscale_factor=3)
+# This is a function in torch used to import data
+train_loader = DataLoader(dataset=train_set, num_workers=4, batch_size=args.batchSize, shuffle=True)
+
+# Load model
+model = SRCNN(3,N_gpu=args.ngpu)
+# loss function
+>>>>>>> Update
 criterion =  nn.MSELoss()
 
 # Check if cuda could be used
@@ -37,6 +48,7 @@ if torch.cuda.is_available():
     model.cuda()
     criterion.cuda()
 
+<<<<<<< HEAD
 optimizer = optim.SGD(model.parameters(), lr = args.lr)
 
 for e in range(args.nepho):
@@ -48,6 +60,29 @@ for e in range(args.nepho):
             loss.backward()
             optimizer.step()
 
+=======
+# Set optimizer method
+optimizer = optim.SGD(model.parameters(), lr = args.lr)
+
+# iteration in nepho
+for e in range(args.nepho):
+    # (data, target): training data; i: number of data
+    for i,(data, target) in enumerate(train_loader):
+        # if cuda is available
+        if torch.cuda.is_available():
+            # get data, target
+            data, target = Variable(data).cuda(), Variable(target).cuda()
+            # predict data
+            predict = model(data)
+            # compute the loss
+            loss = criterion(predict,target)
+            # back propagation
+            loss.backward()
+            # update parameters
+            optimizer.step()
+
+            # loss.data contain ...
+>>>>>>> Update
             loss_v = loss.data[0]
             print(loss_v)
 

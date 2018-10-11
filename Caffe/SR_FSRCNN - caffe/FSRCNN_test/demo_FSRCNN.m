@@ -34,6 +34,10 @@ for i = 1 : length(filepaths)
     end
     im_gnd = modcrop(im, up_scale);
     im_gnd = single(im_gnd)/255;
+<<<<<<< HEAD
+=======
+    % im_l: LR image downscaled by bicubic
+>>>>>>> Update
     im_l = imresize(im_gnd, 1/up_scale, 'bicubic');
 
     %% FSRCNN

@@ -5,16 +5,20 @@ load(model);
 [hei,wid] = size(im_l);
 outhei = hei * up_scale;
 outwid = wid * up_scale;
+% weights_conv is a cell parameter
 layer_num = length(weights_conv);
+% conv_data is an empty cell with layer_num
 conv_data = cell(layer_num,1);
 
 %% conv1
 weight = weights_conv{1};
 bias = biases_conv{1};
 [channel, filtersize, filters] = size(weight);
+% patchsize*patchsize=filtersize
 patchsize = sqrt(filtersize);
 weight = reshape(weight, patchsize, patchsize, filters);
 data_tmp = zeros(hei, wid, filters);
+% convolution and use activation function
 for i = 1 : filters 
     data_tmp(:,:,i) = imfilter(im_l, weight(:,:,i), 'same','replicate');
     data_tmp(:,:,i) = max(data_tmp(:,:,i) + bias(i), 0) + prelu_conv{1} * min(data_tmp(:,:,i) + bias(i),0);
@@ -22,6 +26,7 @@ end
 conv_data{1} = data_tmp;
 
 %% conv2+
+% use for loop to complete middle layers 
 for idx = 2 : layer_num-1
     weight = weights_conv{idx};
     bias = biases_conv{idx};
@@ -29,7 +34,10 @@ for idx = 2 : layer_num-1
     patchsize = sqrt(filtersize);
     data_tmp = zeros(hei, wid, filters);
     data_pre = conv_data{idx-1};
+    % i loop for i filters
     for i = 1 : filters
+        % j loop for each input channel
+        % channel is same as input channel number
         for j = 1 : channel
             subfilter = reshape(weight(j,:,i), patchsize, patchsize);
             data_tmp(:,:,i) = data_tmp(:,:,i) + imfilter(data_pre(:,:,j), subfilter, 'same', 'replicate');
@@ -53,6 +61,8 @@ patchsize = sqrt(filtersize);
 
 conv3_data = zeros(outhei,outwid);
 conv2_data = conv_data{layer_num-1};
+% each channel j has a deconvolution kernel
+% deconv: 9*9*channel, output 1
 for j = 1 : channel
     subfilter = reshape(weight(j,:), patchsize, patchsize);
     conv3_data(:,:)=conv3_data(:,:) + deconv(conv2_data(:,:,j), subfilter, up_scale);
