@@ -57,18 +57,15 @@ chunksz = 128;
 created_flag = false;
 totalct = 0;
 
-% batchno is batch number, every 128 images form a batch
+% batchno is batch number, every 128 images form a 
 for batchno = 1:floor(count/chunksz)
     last_read = (batchno-1)*chunksz;
-    % form batch input and label images
     batchdata = data(:,:,1,last_read+1:last_read+chunksz); 
     batchlabs = label(:,:,1,last_read+1:last_read+chunksz);
 
-    % point at which to start writing data
     startloc = struct('dat',[1,1,1,totalct+1], 'lab', [1,1,1,totalct+1]);
     curr_dat_sz = store2hdf5(savepath, batchdata, batchlabs, ~created_flag, startloc, chunksz); 
     created_flag = true;
-    % point to last data
     totalct = curr_dat_sz(end);
 end
 h5disp(savepath);
