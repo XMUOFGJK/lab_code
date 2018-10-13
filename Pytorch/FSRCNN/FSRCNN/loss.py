@@ -12,6 +12,7 @@ class HuberLoss(nn.Module):
         loss = self.SmoothL1Loss(input / self.delta, target / self.delta)
         return loss * self.delta * self.delta
 
+# Used in LapSRN
 class CharbonnierLoss(nn.Module):
     def __init__(self, delta=1e-3):
         super(CharbonnierLoss, self).__init__()

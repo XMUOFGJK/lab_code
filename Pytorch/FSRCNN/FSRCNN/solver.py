@@ -17,6 +17,7 @@ from torchviz import make_dot
 from loss import HuberLoss, CharbonnierLoss
 
 class solver(object):
+    # config include a number of different args set in main.py
     def __init__(self, config, train_loader, set5_h5_loader, set14_h5_loader, set5_img_loader, set14_img_loader):
         self.model = None
         self.lr = config.lr
@@ -24,7 +25,9 @@ class solver(object):
         self.mom = config.mom
         self.logs = config.logs
         self.n_epochs = config.n_epochs
+        # loss function
         self.criterion = None
+        # optimization algorithmn
         self.optimizer = None
         self.scheduler = None
         self.GPU = torch.cuda.is_available()
@@ -35,6 +38,7 @@ class solver(object):
         self.set5_img_loader = set5_img_loader
         self.set14_img_loader = set14_img_loader
         self.logger = Logger(self.logs + '/')
+        # recorde information during iteration
         self.info = {'loss':0, 'PSNR for Set5':0, 'PSNR for Set14':0}
         # 'PSNR for Set5 patch':0, 'PSNR for Set14 patch':0
         self.final_para = []
@@ -65,6 +69,9 @@ class solver(object):
             cudnn.benchmark = True
             self.criterion.cuda()
 
+        # You can still pass options as keyword arguments. They will be used as defaults, in the groups that didn’t override them. 
+        # This is useful when you only want to vary a single option, while keeping all others consistent between parameter groups.
+        # [i] is indicator of linear/activation part?
         self.optimizer = optim.SGD([{'params': self.model.first_part[0].weight}, # feature extraction layer
                                     {'params': self.model.first_part[0].bias, 'lr': 0.1 * self.lr},
                                     {'params': self.model.mid_part[0][0].weight}, # shrinking layer

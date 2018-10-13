@@ -52,8 +52,11 @@ class Net(torch.nn.Module):
         :return:
         '''
         for m in self.modules():
+            # if m is conv or deconv layer
             if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
                 # m.weight.data.normal_(0.0, 0.2)
+                # torch.nn.init.normal_(tensor, mean=0, std=1)
+                # fill m with mean 0, standard sqrt(2/m.out_channels/m.kernel_size[0]/m.kernel_size[0])
                 m.weight.data.normal_(0.0, sqrt(2/m.out_channels/m.kernel_size[0]/m.kernel_size[0])) # MSRA
                 # nn.init.xavier_normal(m.weight) # Xavier
                 if m.bias is not None:

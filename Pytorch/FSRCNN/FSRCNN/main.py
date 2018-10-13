@@ -18,6 +18,7 @@ args = parser.parse_args()
 
 def main():
     print('===> Loading datasets')
+    # Read different datasetss
     train_set = get_h5_set(args.train_set)
     set5_h5 = get_h5_set('test/Set5.h5')
     set14_h5 = get_h5_set('test/Set14.h5')
